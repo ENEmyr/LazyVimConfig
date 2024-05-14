@@ -123,30 +123,30 @@ return {
       rocks = { "magick" },
     },
   },
-  {
-    "3rd/image.nvim",
-    dependencies = { "luarocks.nvim" },
-    config = function()
-      require("image").setup({
-        backend = "kitty", -- Kitty will provide the best experience, but you need a compatible terminal
-        integrations = {
-          markdown = {
-            enabled = true,
-            clear_in_insert_mode = false,
-            download_remote_images = true,
-            only_render_image_at_cursor = false,
-            filetypes = { "markdown", "vimwiki" }, -- markdown extensions (ie. quarto) can go here
-          },
-        }, -- do whatever you want with image.nvim's integrations
-        max_width = 150, -- tweak to preference
-        max_height = 18, -- ^
-        max_height_window_percentage = math.huge, -- this is necessary for a good experience
-        max_width_window_percentage = math.huge,
-        window_overlap_clear_enabled = true,
-        window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
-      })
-    end,
-  },
+  -- {
+  --   "3rd/image.nvim",
+  --   dependencies = { "luarocks.nvim" },
+  --   config = function()
+  --     require("image").setup({
+  --       backend = "kitty", -- Kitty will provide the best experience, but you need a compatible terminal
+  --       integrations = {
+  --         markdown = {
+  --           enabled = true,
+  --           clear_in_insert_mode = false,
+  --           download_remote_images = true,
+  --           only_render_image_at_cursor = false,
+  --           filetypes = { "markdown", "vimwiki" }, -- markdown extensions (ie. quarto) can go here
+  --         },
+  --       }, -- do whatever you want with image.nvim's integrations
+  --       max_width = 150, -- tweak to preference
+  --       max_height = 18, -- ^
+  --       max_height_window_percentage = math.huge, -- this is necessary for a good experience
+  --       max_width_window_percentage = math.huge,
+  --       window_overlap_clear_enabled = true,
+  --       window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
+  --     })
+  --   end,
+  -- },
   {
     "benlubas/molten-nvim",
     version = "^1.0.0", -- use version <2.0.0 to avoid breaking changes
@@ -210,6 +210,23 @@ return {
         end,
       })
     end,
+  },
+  {
+    "kawre/leetcode.nvim",
+    build = ":TSUpdate html",
+    dependencies = {
+      "nvim-telescope/telescope.nvim",
+      "nvim-lua/plenary.nvim", -- required by telescope
+      "MunifTanjim/nui.nvim",
+
+      -- optional
+      "nvim-treesitter/nvim-treesitter",
+      "rcarriga/nvim-notify",
+      "nvim-tree/nvim-web-devicons",
+    },
+    opts = {
+      -- configuration goes here
+    },
   },
   -- {
   --   "zbirenbaum/copilot-cmp",
