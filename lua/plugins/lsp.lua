@@ -38,6 +38,21 @@ return {
           clangdFileStatus = true,
         },
       },
+      pyright = {
+        enabled = true,
+        keys = {
+          { "<leader>co", "<cmd>PyrightOrganizeImports<cr>", desc = "Organize Imports" },
+        },
+      },
+      basedpyright = {
+        enabled = false,
+      },
+      ruff_lsp = {
+        enabled = false,
+      },
+      ruff = {
+        enabled = false,
+      },
     },
     setup = {
       clangd = function(_, opts)
