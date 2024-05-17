@@ -1,4 +1,15 @@
-return {
+function OS()
+  return package.config:sub(1, 1) == "\\" and "win" or "unix"
+end
+
+function TableConcat(t1, t2)
+  for i = 1, #t2 do
+    t1[#t1 + 1] = t2[i]
+  end
+  return t1
+end
+
+PLUGINS = {
   {
     "phaazon/hop.nvim",
     event = "BufRead",
@@ -16,17 +27,6 @@ return {
       vim.cmd("let g:minimap_auto_start_win_enter = 1")
     end,
   },
-  -- {
-  --   "p00f/nvim-ts-rainbow", -- Rainbow parentheses
-  --   config = function()
-  --     require("nvim-treesitter.configs").setup({
-  --       rainbow = {
-  --         enable = true,
-  --         extended_mode = true,
-  --       },
-  --     })
-  --   end,
-  -- },
   {
     "norcalli/nvim-colorizer.lua", -- Display colors code as colors
     config = function()
@@ -123,45 +123,6 @@ return {
       rocks = { "magick" },
     },
   },
-  -- {
-  --   "3rd/image.nvim",
-  --   dependencies = { "luarocks.nvim" },
-  --   config = function()
-  --     require("image").setup({
-  --       backend = "kitty", -- Kitty will provide the best experience, but you need a compatible terminal
-  --       integrations = {
-  --         markdown = {
-  --           enabled = true,
-  --           clear_in_insert_mode = false,
-  --           download_remote_images = true,
-  --           only_render_image_at_cursor = false,
-  --           filetypes = { "markdown", "vimwiki" }, -- markdown extensions (ie. quarto) can go here
-  --         },
-  --       }, -- do whatever you want with image.nvim's integrations
-  --       max_width = 150, -- tweak to preference
-  --       max_height = 18, -- ^
-  --       max_height_window_percentage = math.huge, -- this is necessary for a good experience
-  --       max_width_window_percentage = math.huge,
-  --       window_overlap_clear_enabled = true,
-  --       window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
-  --     })
-  --   end,
-  -- },
-  {
-    "benlubas/molten-nvim",
-    version = "^1.0.0", -- use version <2.0.0 to avoid breaking changes
-    dependencies = { "3rd/image.nvim" },
-    build = ":UpdateRemotePlugins",
-    init = function()
-      vim.g.molten_image_provider = "image.nvim"
-      vim.g.molten_output_win_max_height = 20
-      vim.g.molten_wrap_output = true
-      -- vim.g.molten_output_show_more = true
-      -- vim.g.molten_output_crop_border = false
-      -- vim.g.molten_output_win_borderr = { "", "━", "", "" }
-      -- vim.g.molten_virt_text_output = false
-    end,
-  },
   {
     "folke/todo-comments.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
@@ -228,6 +189,12 @@ return {
       -- configuration goes here
     },
   },
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    event = "LazyFile",
+    opts = { scope = { enabled = true } },
+    version = "=3.5.4",
+  },
   -- {
   --   "zbirenbaum/copilot-cmp",
   --   config = function()
@@ -244,4 +211,78 @@ return {
   --     vim.g.SimpylFold_docstring_preview = 1
   --   end
   -- },
+  -- {
+  --   "p00f/nvim-ts-rainbow", -- Rainbow parentheses
+  --   config = function()
+  --     require("nvim-treesitter.configs").setup({
+  --       rainbow = {
+  --         enable = true,
+  --         extended_mode = true,
+  --       },
+  --     })
+  --   end,
+  -- },
 }
+
+LINUX_PLUGINS = {
+  {
+    "3rd/image.nvim",
+    dependencies = { "luarocks.nvim" },
+    config = function()
+      require("image").setup({
+        backend = "kitty", -- Kitty will provide the best experience, but you need a compatible terminal
+        integrations = {
+          markdown = {
+            enabled = true,
+            clear_in_insert_mode = false,
+            download_remote_images = true,
+            only_render_image_at_cursor = false,
+            filetypes = { "markdown", "vimwiki" }, -- markdown extensions (ie. quarto) can go here
+          },
+        }, -- do whatever you want with image.nvim's integrations
+        max_width = 150, -- tweak to preference
+        max_height = 18, -- ^
+        max_height_window_percentage = math.huge, -- this is necessary for a good experience
+        max_width_window_percentage = math.huge,
+        window_overlap_clear_enabled = true,
+        window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
+      })
+    end,
+  },
+  {
+    "benlubas/molten-nvim",
+    version = "^1.0.0", -- use version <2.0.0 to avoid breaking changes
+    dependencies = { "3rd/image.nvim" },
+    build = ":UpdateRemotePlugins",
+    init = function()
+      vim.g.molten_image_provider = "image.nvim"
+      vim.g.molten_output_win_max_height = 20
+      vim.g.molten_wrap_output = true
+      -- vim.g.molten_output_show_more = true
+      -- vim.g.molten_output_crop_border = false
+      -- vim.g.molten_output_win_borderr = { "", "━", "", "" }
+      -- vim.g.molten_virt_text_output = false
+    end,
+  },
+}
+
+WINDOWS_PLUGINS = {
+  {
+    "benlubas/molten-nvim",
+    version = "^1.0.0", -- use version <2.0.0 to avoid breaking changes
+    build = ":UpdateRemotePlugins",
+    init = function()
+      vim.g.molten_image_provider = "wezterm"
+      vim.g.molten_output_win_max_height = 20
+      vim.g.molten_wrap_output = true
+    end,
+  },
+}
+
+if OS() == "unix" then
+  TableConcat(PLUGINS, LINUX_PLUGINS)
+else
+  TableConcat(PLUGINS, WINDOWS_PLUGINS)
+end
+
+return PLUGINS
