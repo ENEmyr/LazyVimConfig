@@ -189,12 +189,6 @@ PLUGINS = {
       -- configuration goes here
     },
   },
-  {
-    "lukas-reineke/indent-blankline.nvim",
-    event = "LazyFile",
-    opts = { scope = { enabled = true } },
-    version = "=3.5.4",
-  },
   -- {
   --   "zbirenbaum/copilot-cmp",
   --   config = function()
