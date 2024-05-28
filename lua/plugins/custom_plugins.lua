@@ -42,10 +42,6 @@ PLUGINS = {
     end,
   },
   {
-    "tpope/vim-surround", -- Vim surround
-    keys = { "c", "d", "y" },
-  },
-  {
     "dm1try/golden_size", -- golden ratio
     config = function()
       local function ignore_by_buftype(types)
@@ -141,38 +137,6 @@ PLUGINS = {
     end,
   },
   {
-    "CopilotC-Nvim/CopilotChat.nvim",
-    branch = "canary",
-    dependencies = {
-      { "zbirenbaum/copilot.lua" }, -- or github/copilot.vim
-      { "nvim-lua/plenary.nvim" }, -- for curl, log wrapper
-    },
-    opts = {
-      debug = true, -- Enable debugging
-      window = {
-        layout = "float", -- 'vertical', 'horizontal', 'float, 'replace'
-      },
-      -- See Configuration section for rest
-    },
-    -- See Commands section for default commands if you want to lazy load on them
-  },
-  {
-    "terrortylor/nvim-comment",
-    config = function()
-      require("nvim_comment").setup({
-        comment_empty = false,
-        create_mappings = true,
-        line_mapping = "<leader>/",
-        operator_mapping = "<leader>/",
-        hook = function()
-          if vim.api.nvim_buf_get_option(0, "filetype") == "vue" then
-            require("ts_context_commentstring.internal").update_commentstring()
-          end
-        end,
-      })
-    end,
-  },
-  {
     "kawre/leetcode.nvim",
     build = ":TSUpdate html",
     dependencies = {
@@ -189,15 +153,6 @@ PLUGINS = {
       -- configuration goes here
     },
   },
-  -- {
-  --   "zbirenbaum/copilot-cmp",
-  --   config = function()
-  --     require("copilot_cmp").setup({
-  --       suggestion = { enabled = false },
-  --       panel = { enabled = false },
-  --     })
-  --   end,
-  -- },
   -- {
   --   "tmhedberg/SimpylFold",
   --   init = function ()

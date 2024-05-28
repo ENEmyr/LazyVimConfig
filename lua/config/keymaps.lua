@@ -8,11 +8,12 @@ vim.keymap.del("n", "<leader>w|")
 vim.keymap.del("n", "<leader>wd")
 
 -- Set vim keymap
--- vim.keymap.set("v","<leader>mv" , ":<C-u>MoltenEvaluateVisual<CR>gv")
+-- vim.keymap.set("v", "<leader>/", "gc")
 
 -- Which-key keymaps
 local wk = require("which-key")
 wk.register({
+  ["/"] = "Toggle Comment",
   o = {
     name = "OverSeer",
     b = { "<cmd>OverseerBuild<CR>", "Build" },
@@ -31,7 +32,6 @@ wk.register({
     l = { "<cmd>HopWordCurrentLineAC<CR>", "Word After Cursor" },
     s = { "<cmd>HopChar2<CR>", "Search 2 Chars" },
   },
-  ["/"] = { "<cmd>CommentToggle<CR>", "Toggle Comment" },
   p = {
     name = "Pane",
     v = { "<cmd>vsp<CR>", "Vertical Split" },
@@ -64,45 +64,5 @@ wk.register({
     j = { "<cmd>BufferLinePick<CR>", "Jump" },
     f = { "<cmd>Telescope buffers<cr>", "Find" },
   },
-  a = {
-    name = "Copilot",
-    t = { "<cmd>CopilotChatToggle<CR>", "Chat Toggle" },
-    r = { "<cmd>CopilotChatReset<CR>", "Reset Chat" },
-    A = {
-      function()
-        local actions = require("CopilotChat.actions")
-        require("CopilotChat.integrations.telescope").pick(actions.prompt_actions())
-      end,
-      "Prompt Actions",
-      mode = "v",
-    },
-    a = {
-      function()
-        local actions = require("CopilotChat.actions")
-        require("CopilotChat.integrations.telescope").pick(actions.prompt_actions())
-      end,
-      "Prompt Actions",
-      mode = "n",
-    },
-    q = {
-      function()
-        local input = vim.fn.input("Quick Chat: ")
-        if input ~= "" then
-          require("CopilotChat").ask(input, { selection = require("CopilotChat.select").buffer })
-        end
-      end,
-      "Quick Chat",
-      mode = "n",
-    },
-    Q = {
-      function()
-        local input = vim.fn.input("Quick Chat: ")
-        if input ~= "" then
-          require("CopilotChat").ask(input, { selection = require("CopilotChat.select").buffer })
-        end
-      end,
-      "Quick Chat",
-      mode = "v",
-    },
-  },
+  d = { name = "+debug" },
 }, { prefix = "<leader>" })
