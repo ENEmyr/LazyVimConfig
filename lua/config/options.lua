@@ -25,3 +25,6 @@ vim.o.guifont = "CaskaydiaCove Nerd Font:h14"
 
 vim.g.pydocstring_doq_path = "/home/enemy/miniconda3/bin/doq"
 vim.g.pydocstring_enable_mapping = 0
+
+vim.g.root_lsp_ignore = { "copilot" }
+vim.g.ai_cmp = false
