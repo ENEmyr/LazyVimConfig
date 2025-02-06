@@ -15,3 +15,29 @@ vim.api.nvim_create_autocmd("FileType", {
     end)
   end,
 })
+
+if vim.fn.filereadable(vim.fn.getcwd() .. "/project.godot") == 1 then
+  local addr = "./godot.pipe"
+  if vim.fn.has("win32") == 1 then
+    addr = "127.0.0.1:6004"
+  end
+  vim.fn.serverstart(addr)
+end
+-- local godot_projectfile = vim.fn.getcwd() .. "/project.godot"
+-- if godot_projectfile then
+--   vim.fn.serverstart("./godothost")
+-- end
+
+-- Auto-run command before quitting when working on LaTeX files
+local function before_quit_tex()
+  if vim.bo.filetype == "tex" or vim.bo.filetype == "bib" then
+    -- Replace this with the command you want to run before quitting
+    vim.cmd(":VimtexClean")
+  end
+end
+
+-- Set up autocmd to trigger before quitting
+vim.api.nvim_create_autocmd("QuitPre", {
+  callback = before_quit_tex,
+  desc = "Auto-run :VimtexClean before quitting LaTeX files",
+})

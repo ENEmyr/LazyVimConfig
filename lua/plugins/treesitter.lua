@@ -24,6 +24,9 @@ return {
       "tsx",
       "typescript",
       "yaml",
+      "gdscript",
+      "gdshader",
+      "godot_resource",
     },
   },
 }

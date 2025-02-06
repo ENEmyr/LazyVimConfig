@@ -67,31 +67,6 @@ PLUGINS = {
     branch = "master",
   },
   {
-    "andweeb/presence.nvim",
-    config = function()
-      require("presence"):setup({
-        -- General options
-        auto_update = true, -- Update activity based on autocmd events (if false, map or manually execute :lua package.loaded.presence:update())
-        neovim_image_text = "The One True Text Editor", -- Text displayed when hovered over the Neovim image
-        main_image = "neovim", -- Main image display (either "neovim" or "file")
-        client_id = "793271441293967371", -- Use your own Discord application client id (not recommended)
-        log_level = nil, -- Log messages at or above this level (one of the following: "debug", "info", "warn", "error")
-        debounce_timeout = 10, -- Number of seconds to debounce events (or calls to :lua package.loaded.presence:update(<filename>, true))
-        enable_line_number = false, -- Displays the current line number instead of the current project
-        blacklist = {}, -- A list of strings or Lua patterns that disable Rich Presence if the current file name, path, or workspace matches
-        buttons = true, -- Configure Rich Presence button(s), either a boolean to enable/disable, a static table ({{ label = "<label>", url = "<url>" }, ...}, or a function(buffer: string, repo_url: string|nil): table)
-        -- Rich Presence text options
-        editing_text = "Editing %s", -- Format string rendered when an editable file is loaded in the buffer (either string or function(filename: string): string)
-        file_explorer_text = "Browsing %s", -- Format string rendered when browsing a file explorer (either string or function(file_explorer_name: string): string)
-        git_commit_text = "Committing changes", -- Format string rendered when committing changes in git (either string or function(filename: string): string)
-        plugin_manager_text = "Managing plugins", -- Format string rendered when managing plugins (either string or function(plugin_manager_name: string): string)
-        reading_text = "Reading %s", -- Format string rendered when a read-only or unmodifiable file is loaded in the buffer (either string or function(filename: string): string)
-        workspace_text = "Working on %s", -- Format string rendered when in a git repository (either string or function(project_name: string|nil, filename: string): string)
-        line_number_text = "Line %s out of %s", -- Format string rendered when enable_line_number is set to true (either string or function(line_number: number, line_count: number): string)
-      })
-    end,
-  },
-  {
     "stevearc/overseer.nvim",
     config = function()
       require("overseer").setup()
@@ -153,6 +128,17 @@ PLUGINS = {
       -- configuration goes here
     },
   },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    config = function()
+      -- setup treesitter with config
+    end,
+    dependencies = {
+      -- NOTE: additional parser
+      { "nushell/tree-sitter-nu" },
+    },
+    build = ":TSUpdate",
+  },
   -- {
   --   "tmhedberg/SimpylFold",
   --   init = function ()
@@ -213,6 +199,32 @@ LINUX_PLUGINS = {
       -- vim.g.molten_virt_text_output = false
     end,
   },
+  {
+    -- "andweeb/presence.nvim" ,-- unload this og plugin because it's unmaintained
+    "jiriks74/presence.nvim",
+    config = function()
+      require("presence"):setup({
+        -- General options
+        auto_update = true, -- Update activity based on autocmd events (if false, map or manually execute :lua package.loaded.presence:update())
+        neovim_image_text = "The One True Text Editor", -- Text displayed when hovered over the Neovim image
+        main_image = "neovim", -- Main image display (either "neovim" or "file")
+        client_id = "793271441293967371", -- Use your own Discord application client id (not recommended)
+        log_level = nil, -- Log messages at or above this level (one of the following: "debug", "info", "warn", "error")
+        debounce_timeout = 10, -- Number of seconds to debounce events (or calls to :lua package.loaded.presence:update(<filename>, true))
+        enable_line_number = false, -- Displays the current line number instead of the current project
+        blacklist = {}, -- A list of strings or Lua patterns that disable Rich Presence if the current file name, path, or workspace matches
+        buttons = true, -- Configure Rich Presence button(s), either a boolean to enable/disable, a static table ({{ label = "<label>", url = "<url>" }, ...}, or a function(buffer: string, repo_url: string|nil): table)
+        -- Rich Presence text options
+        editing_text = "Editing %s", -- Format string rendered when an editable file is loaded in the buffer (either string or function(filename: string): string)
+        file_explorer_text = "Browsing %s", -- Format string rendered when browsing a file explorer (either string or function(file_explorer_name: string): string)
+        git_commit_text = "Committing changes", -- Format string rendered when committing changes in git (either string or function(filename: string): string)
+        plugin_manager_text = "Managing plugins", -- Format string rendered when managing plugins (either string or function(plugin_manager_name: string): string)
+        reading_text = "Reading %s", -- Format string rendered when a read-only or unmodifiable file is loaded in the buffer (either string or function(filename: string): string)
+        workspace_text = "Working on %s", -- Format string rendered when in a git repository (either string or function(project_name: string|nil, filename: string): string)
+        line_number_text = "Line %s out of %s", -- Format string rendered when enable_line_number is set to true (either string or function(line_number: number, line_count: number): string)
+      })
+    end,
+  },
 }
 
 WINDOWS_PLUGINS = {
@@ -224,6 +236,69 @@ WINDOWS_PLUGINS = {
       vim.g.molten_image_provider = "wezterm"
       vim.g.molten_output_win_max_height = 20
       vim.g.molten_wrap_output = true
+    end,
+  },
+  {
+    "Vigemus/iron.nvim",
+    config = function()
+      require("iron.core").setup({
+        config = {
+          -- Whether a repl should be discarded or not
+          scratch_repl = true,
+          -- Your repl definitions come here
+          repl_definition = {
+            sh = {
+              -- Can be a table or a function that
+              -- returns a table (see below)
+              command = { "zsh" },
+            },
+            python = {
+              -- Can be a table or a function that
+              -- returns a table (see below)
+              command = { "python" },
+            },
+          },
+          -- How the repl window will be displayed
+          -- See below for more information
+          repl_open_cmd = require("iron.view").right(80),
+        },
+        -- Iron doesn't set keymaps by default anymore.
+        -- You can set them here or manually add keymaps to the functions in iron.core
+        keymaps = {
+          send_motion = "<space>ic",
+          visual_send = "<space>ic",
+          send_file = "<space>if",
+          send_line = "<space>il",
+          send_paragraph = "<space>ip",
+          send_until_cursor = "<space>iu",
+          send_mark = "<space>im",
+          mark_motion = "<space>mc",
+          mark_visual = "<space>mc",
+          remove_mark = "<space>md",
+          cr = "<space>i<cr>",
+          interrupt = "<space>i<space>",
+          exit = "<space>iq",
+          clear = "<space>cc",
+        },
+        -- If the highlight is on, you can change how it looks
+        -- For the available options, check nvim_set_hl
+        highlight = {
+          italic = true,
+        },
+        ignore_blank_lines = true, -- ignore blank lines when sending visual select lines
+      })
+    end,
+  },
+  {
+    "lervag/vimtex",
+    lazy = false, -- we don't want to lazy load VimTeX
+    -- tag = "v2.15", -- uncomment to pin to a specific release
+    init = function()
+      -- VimTeX configuration goes here, e.g.
+      -- vim.g.vimtex_view_method = "okular"
+      vim.g.vimtex_compiler_latexmk_engines = { _ = "-xelatex" }
+      vim.g.vimtex_view_general_viewer = "okular"
+      vim.g.vimtex_view_general_options = "--unique file:@pdf\\#src:@line@tex"
     end,
   },
 }

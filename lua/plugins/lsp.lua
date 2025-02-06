@@ -1,3 +1,10 @@
+local gd_cmd = { "localhost", os.getenv("GDScript_Port") or "6005" }
+if vim.fn.has("win32") == 1 then
+  table.insert(gd_cmd, 1, "ncat")
+else
+  table.insert(gd_cmd, 1, "nc")
+end
+
 return {
   "neovim/nvim-lspconfig",
   opts = {
@@ -52,6 +59,20 @@ return {
       },
       ruff = {
         enabled = false,
+      },
+      gdscript = {
+        enabled = true,
+        cmd = gd_cmd,
+        root_dir = function(fname)
+          return vim.fs.dirname(vim.fs.find({ "project.godot", ".git" }, { upward = true })[1])
+        end,
+        -- root_dir = function(fname)
+        --   return require("lspconfig.util").root_pattern("project.godot", ".git")(fname)
+        --     or require("lspconfig.util").find_git_ancestor(fname)
+        -- end,
+      },
+      gdshader_lsp = {
+        enabled = true,
       },
     },
     setup = {
