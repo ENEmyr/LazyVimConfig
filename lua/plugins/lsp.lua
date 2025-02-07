@@ -39,13 +39,48 @@ return {
         },
       },
       pyright = {
-        enabled = true,
+        enabled = false,
+        pyright = {
+          autoImportCompletions = true,
+          reportUnknownVariableType = false,
+          reportUnusedImport = false,
+          disableOrganizeImports = false,
+        },
+        settings = {
+          python = {
+            analysis = {
+              ignore = { "*" },
+              typeCheckingMode = "standard",
+              diagnosticMode = "workspace",
+              useLibraryCodeForTypes = true,
+              autoSearchPaths = true,
+            },
+          },
+        },
         keys = {
           { "<leader>co", "<cmd>PyrightOrganizeImports<cr>", desc = "Organize Imports" },
         },
       },
       basedpyright = {
-        enabled = false,
+        enabled = true,
+        settings = {
+          autoImportCompletions = true,
+          reportUnknownVariableType = false,
+          reportUnusedImport = false,
+          disableOrganizeImports = false,
+          basedpyright = {
+            analysis = {
+              -- ignore = { "*" },
+              typeCheckingMode = "standard",
+              diagnosticMode = "workspace",
+              useLibraryCodeForTypes = true,
+              autoSearchPaths = true,
+            },
+          },
+        },
+        keys = {
+          { "<leader>co", "<cmd>PyrightOrganizeImports<cr>", desc = "Organize Imports" },
+        },
       },
       ruff_lsp = {
         enabled = false,
