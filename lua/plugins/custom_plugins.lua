@@ -189,6 +189,28 @@ PLUGINS = {
       -- configuration goes here
     },
   },
+  {
+    "SUSTech-data/neopyter",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter", -- neopyter don't depend on `nvim-treesitter`, but does depend on treesitter parser of python
+      "AbaoFromCUG/websocket.nvim", -- for mode='direct'
+    },
+
+    ---@type neopyter.Option
+    opts = {
+      mode = "direct",
+      remote_address = "127.0.0.1:9001",
+      file_pattern = { "*.ju.*" },
+      on_attach = function(bufnr)
+        -- do some buffer keymap
+      end,
+    },
+  },
+  {
+    "kevinhwang91/nvim-ufo",
+    dependencies = { "kevinhwang91/promise-async" },
+  },
   -- {
   --   "zbirenbaum/copilot-cmp",
   --   config = function()
