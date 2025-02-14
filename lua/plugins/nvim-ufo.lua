@@ -32,7 +32,11 @@ end
 --     fold_virt_text_handler = handler
 --   end,
 -- }
-
-require("ufo").setup({
-  fold_virt_text_handler = handler,
-})
+return {
+  "kevinhwang91/nvim-ufo",
+  opts = {
+    fold_virt_text_handler = handler,
+  },
+}
+-- require("ufo").setup({
+-- })
