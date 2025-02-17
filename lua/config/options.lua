@@ -28,3 +28,14 @@ vim.g.pydocstring_enable_mapping = 0
 
 vim.g.root_lsp_ignore = { "copilot" }
 vim.g.ai_cmp = false
+
+-- -- Set text width for automatic line wrapping
+-- vim.opt.textwidth = 80
+-- -- Enable breaking long lines while preserving logical structure
+-- vim.opt.linebreak = true
+-- -- Soft wrapping (prevents breaking words in the middle)
+-- vim.opt.wrap = true
+-- -- Enable auto-wrapping at textwidth
+-- vim.opt.formatoptions:append("t")
+-- -- Enable `gq` formatting (paragraph reflow)
+-- vim.opt.formatoptions:append("a")
