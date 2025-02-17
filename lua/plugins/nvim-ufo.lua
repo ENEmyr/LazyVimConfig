@@ -26,17 +26,9 @@ local handler = function(virtText, lnum, endLnum, width, truncate)
   return newVirtText
 end
 
--- return {
---   "kevinhwang91/nvim-ufo",
---   opts = function()
---     fold_virt_text_handler = handler
---   end,
--- }
 return {
   "kevinhwang91/nvim-ufo",
   opts = {
     fold_virt_text_handler = handler,
   },
 }
--- require("ufo").setup({
--- })

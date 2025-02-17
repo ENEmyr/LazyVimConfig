@@ -137,6 +137,13 @@ PLUGINS = {
         auto_session_enabled = true,
         auto_save_enabled = true,
         auto_restore_enabled = true,
+        pre_save_cmds = { "NvimTreeClose" },
+        save_extra_cmds = {
+          "NvimTreeOpen",
+        },
+        post_restore_cmds = {
+          "NvimTreeOpen",
+        },
       })
     end,
   },
@@ -162,8 +169,8 @@ PLUGINS = {
       require("nvim_comment").setup({
         comment_empty = false,
         create_mappings = true,
-        line_mapping = "<leader>/",
-        operator_mapping = "<leader>/",
+        line_mapping = "<leader>\\",
+        operator_mapping = "<leader>\\",
         hook = function()
           if vim.api.nvim_buf_get_option(0, "filetype") == "vue" then
             require("ts_context_commentstring.internal").update_commentstring()
@@ -190,22 +197,10 @@ PLUGINS = {
     },
   },
   {
-    "SUSTech-data/neopyter",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-treesitter/nvim-treesitter", -- neopyter don't depend on `nvim-treesitter`, but does depend on treesitter parser of python
-      "AbaoFromCUG/websocket.nvim", -- for mode='direct'
-    },
-
-    ---@type neopyter.Option
-    opts = {
-      mode = "direct",
-      remote_address = "127.0.0.1:9001",
-      file_pattern = { "*.ju.*" },
-      on_attach = function(bufnr)
-        -- do some buffer keymap
-      end,
-    },
+    "kiyoon/jupynium.nvim",
+    build = "pip3 install --user .",
+    -- build = "conda run --no-capture-output -n jupynium pip install .",
+    -- enabled = vim.fn.isdirectory(vim.fn.expand "~/miniconda3/envs/jupynium"),
   },
   {
     "kevinhwang91/nvim-ufo",
