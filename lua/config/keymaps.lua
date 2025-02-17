@@ -13,7 +13,7 @@
 -- Which-key keymaps
 local wk = require("which-key")
 wk.add({
-  { "<leader>/", desc = "Toggle Comment" },
+  { "<leader>\\", "<cmd>CommentToggle<CR>", desc = "Toggle Comment" },
 
   { "<leader>a", group = "Copilot" },
   { "<leader>at", "<cmd>CopilotChatToggle<CR>", desc = "Chat Toggle" },
