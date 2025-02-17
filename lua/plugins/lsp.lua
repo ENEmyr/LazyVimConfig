@@ -39,18 +39,19 @@ return {
         },
       },
       pyright = {
-        enabled = false,
-        pyright = {
-          autoImportCompletions = true,
-          reportUnknownVariableType = false,
-          reportUnusedImport = false,
-          disableOrganizeImports = false,
-        },
+        enabled = true,
+        -- pyright = {
+        --   autoImportCompletions = true,
+        --   reportUnknownVariableType = false,
+        --   reportUnusedImport = false,
+        --   disableOrganizeImports = true,
+        -- },
         settings = {
           python = {
             analysis = {
               ignore = { "*" },
-              typeCheckingMode = "standard",
+              -- typeCheckingMode = "standard",
+              typeCheckingMode = "basic",
               diagnosticMode = "workspace",
               useLibraryCodeForTypes = true,
               autoSearchPaths = true,
@@ -62,17 +63,18 @@ return {
         },
       },
       basedpyright = {
-        enabled = true,
+        enabled = false,
         settings = {
           autoImportCompletions = true,
           reportUnknownVariableType = false,
           reportUnusedImport = false,
-          disableOrganizeImports = false,
+          disableOrganizeImports = true,
           basedpyright = {
             analysis = {
-              -- ignore = { "*" },
-              typeCheckingMode = "standard",
-              diagnosticMode = "workspace",
+              ignore = { "*" },
+              -- typeCheckingMode = "basic",
+              typeCheckingMode = "off",
+              -- diagnosticMode = "workspace",
               useLibraryCodeForTypes = true,
               autoSearchPaths = true,
             },
@@ -82,11 +84,48 @@ return {
           { "<leader>co", "<cmd>PyrightOrganizeImports<cr>", desc = "Organize Imports" },
         },
       },
-      ruff_lsp = {
-        enabled = false,
-      },
       ruff = {
-        enabled = false,
+        enabled = true,
+        settings = {
+          -- Ruff-specific settings
+          ruff = {
+            organizeImports = true, -- Auto-organize imports
+            lint = {
+              enabled = true, -- Enable linting
+              ignore = {}, -- You can specify ignored rules here
+            },
+            format = { enabled = true }, -- Enable autoformatting
+          },
+        },
+      },
+      texlab = {
+        enabled = true,
+        settings = {
+          texlab = {
+            build = {
+              -- executable = "sh",
+              -- args = { "-c", "latexmk -xelatex -interaction=nonstopmode -cd && latexmk -c" },
+              executable = "latexmk",
+              args = { "-xelatex", "-cd", "-interaction=nonstopmode" },
+              -- args = { "-pdf", "-interaction=nonstopmode", "-synctex=1", "%f" },
+              onSave = false,
+              forwardSearchAfter = false,
+            },
+            chktex = { -- Run chktex linting
+              onEdit = true,
+              onOpenAndSave = true,
+            },
+            forwardSearch = {
+              executable = "zathura",
+              args = { "--synctex-forward", "%l:1:%f", "%p" },
+            },
+            formatterLineLength = 80,
+            latexFormatter = "latexindent",
+            latexindent = {
+              modifyLineBreaks = true,
+            },
+          },
+        },
       },
     },
     setup = {
