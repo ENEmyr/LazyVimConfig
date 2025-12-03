@@ -41,15 +41,15 @@ PLUGINS = {
       })
     end,
   },
+  -- {
+  --   "tpope/vim-surround", -- Vim surround
+  --   keys = { "c", "d", "y" },
+  -- },
   {
-    "tpope/vim-surround", -- Vim surround
-    keys = { "c", "d", "y" },
-  },
-  {
-    "dm1try/golden_size", -- golden ratio
+    "dm1try/golden_size",
     config = function()
       local function ignore_by_buftype(types)
-        local buftype = vim.api.nvim_buf_get_option(0, "buftype")
+        local buftype = vim.bo.buftype -- (Modernized from vim.api.nvim_buf_get_option)
         for _, type in pairs(types) do
           if type == buftype then
             return 1
@@ -57,12 +57,28 @@ PLUGINS = {
         end
       end
 
+      -- NEW Helper: Ignore by Filetype (This catches Snacks/Opencode)
+      local function ignore_by_filetype(types)
+        local filetype = vim.bo.filetype
+        for _, type in pairs(types) do
+          if type == filetype then
+            return 1
+          end
+        end
+      end
+
       local golden_size = require("golden_size")
-      -- set the callbacks, preserve the defaults
+      
       golden_size.set_ignore_callbacks({
-        { ignore_by_buftype, { "terminal", "quickfix", "nerdtree", "nofile", "minimap", "outline" } }, -- nofile is the filetype of NvimTree
-        { golden_size.ignore_float_windows }, -- default one, ignore float windows
-        { golden_size.ignore_by_window_flag }, -- default one, ignore windows with w:ignore_gold_size=1
+        { ignore_by_buftype, { "terminal", "quickfix", "nerdtree", "nofile", "minimap", "outline" } },
+        
+        -- NEW: Ignore specific plugin filetypes
+        -- "snacks_terminal" covers the Opencode window when using Snacks
+        { ignore_by_filetype, { "snacks_terminal", "snacks_input", "snacks_win" } },
+        
+        -- Default ignores
+        { golden_size.ignore_float_windows },
+        { golden_size.ignore_by_window_flag },
       })
     end,
   },
@@ -137,31 +153,15 @@ PLUGINS = {
         auto_session_enabled = true,
         auto_save_enabled = true,
         auto_restore_enabled = true,
-        pre_save_cmds = { "NvimTreeClose" },
+        pre_save_cmds = { "Neotree close" },
         save_extra_cmds = {
-          "NvimTreeOpen",
+          "Neotree show",
         },
         post_restore_cmds = {
-          "NvimTreeOpen",
+          "Neotree show",
         },
       })
     end,
-  },
-  {
-    "CopilotC-Nvim/CopilotChat.nvim",
-    branch = "canary",
-    dependencies = {
-      { "zbirenbaum/copilot.lua" }, -- or github/copilot.vim
-      { "nvim-lua/plenary.nvim" }, -- for curl, log wrapper
-    },
-    opts = {
-      debug = true, -- Enable debugging
-      window = {
-        layout = "float", -- 'vertical', 'horizontal', 'float, 'replace'
-      },
-      -- See Configuration section for rest
-    },
-    -- See Commands section for default commands if you want to lazy load on them
   },
   {
     "terrortylor/nvim-comment",
@@ -206,6 +206,53 @@ PLUGINS = {
     "kevinhwang91/nvim-ufo",
     dependencies = { "kevinhwang91/promise-async" },
   },
+  {
+    "NickvanDyke/opencode.nvim",
+    dependencies = {
+      -- Recommended for `ask()` and `select()`.
+      -- Required for `snacks` provider.
+      ---@module 'snacks' <- Loads `snacks.nvim` types for configuration intellisense.
+      { "folke/snacks.nvim", opts = { input = {}, picker = {}, terminal = {} } },
+    },
+    config = function()
+      ---@type opencode.Opts
+      vim.g.opencode_opts = {
+        -- Your configuration, if any — see `lua/opencode/config.lua`, or "goto definition".
+          provider = {
+            enabled = "snacks", -- Default if inside a `tmux` session.
+            snacks = {
+              -- This passes options directly to Snacks.terminal()
+              -- 'float' is usually the default, but we can enforce styling here:
+              win = {
+                position = "bottom", -- float
+                border = "rounded",
+                -- width = 0.8, -- 80% width
+                height = 0.5, -- 80% height
+                -- Force the window variable so golden_size ignores it
+                w = { ignore_gold_size = 1 },
+              },
+            },
+            tmux = {
+              options = "-h", -- Options to pass to `tmux split-window`.
+            },
+        },
+      }
+      -- Required for `opts.events.reload`.
+      vim.o.autoread = true
+
+      -- Recommended/example keymaps.
+      vim.keymap.set({ "n", "x" }, "<C-a>", function() require("opencode").ask("@this: ", { submit = true }) end, { desc = "Ask opencode" })
+      vim.keymap.set({ "n", "x" }, "<C-x>", function() require("opencode").select() end,                          { desc = "Execute opencode action…" })
+      vim.keymap.set({ "n", "x" },    "ga", function() require("opencode").prompt("@this") end,                   { desc = "Add to opencode" })
+      vim.keymap.set({ "n", "t" }, "<leader>at", function() require("opencode").toggle() end,                          { desc = "Toggle opencode" })
+      -- vim.keymap.set({ "n", "t" }, "<C-,>", function() require("opencode").toggle() end,                          { desc = "Toggle opencode" })
+      vim.keymap.set("n",        "<S-C-u>", function() require("opencode").command("session.half.page.up") end,   { desc = "opencode half page up" })
+      vim.keymap.set("n",        "<S-C-d>", function() require("opencode").command("session.half.page.down") end, { desc = "opencode half page down" })
+      -- You may want these if you stick with the opinionated "<C-a>" and "<C-x>" above — otherwise consider "<leader>o".
+      vim.keymap.set('n', '+', '<C-a>', { desc = 'Increment', noremap = true })
+      vim.keymap.set('n', '-', '<C-x>', { desc = 'Decrement', noremap = true })
+    end,
+  }
   -- {
   --   "zbirenbaum/copilot-cmp",
   --   config = function()
@@ -236,31 +283,31 @@ PLUGINS = {
 }
 
 LINUX_PLUGINS = {
-  {
-    "3rd/image.nvim",
-    dependencies = { "luarocks.nvim" },
-    config = function()
-      require("image").setup({
-        backend = "kitty", -- Kitty will provide the best experience, but you need a compatible terminal
-        processor = "magick_cli",
-        integrations = {
-          markdown = {
-            enabled = true,
-            clear_in_insert_mode = false,
-            download_remote_images = true,
-            only_render_image_at_cursor = false,
-            filetypes = { "markdown", "vimwiki" }, -- markdown extensions (ie. quarto) can go here
-          },
-        }, -- do whatever you want with image.nvim's integrations
-        max_width = 150, -- tweak to preference
-        max_height = 18, -- ^
-        max_height_window_percentage = math.huge, -- this is necessary for a good experience
-        max_width_window_percentage = math.huge,
-        window_overlap_clear_enabled = true,
-        window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
-      })
-    end,
-  },
+  -- {
+  --   "3rd/image.nvim",
+  --   dependencies = { "luarocks.nvim" },
+  --   config = function()
+  --     require("image").setup({
+  --       backend = "kitty", -- Kitty will provide the best experience, but you need a compatible terminal
+  --       processor = "magick_cli",
+  --       integrations = {
+  --         markdown = {
+  --           enabled = true,
+  --           clear_in_insert_mode = false,
+  --           download_remote_images = true,
+  --           only_render_image_at_cursor = false,
+  --           filetypes = { "markdown", "vimwiki" }, -- markdown extensions (ie. quarto) can go here
+  --         },
+  --       }, -- do whatever you want with image.nvim's integrations
+  --       max_width = 150, -- tweak to preference
+  --       max_height = 18, -- ^
+  --       max_height_window_percentage = math.huge, -- this is necessary for a good experience
+  --       max_width_window_percentage = math.huge,
+  --       window_overlap_clear_enabled = true,
+  --       window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
+  --     })
+  --   end,
+  -- },
   {
     "benlubas/molten-nvim",
     version = "^1.0.0", -- use version <2.0.0 to avoid breaking changes

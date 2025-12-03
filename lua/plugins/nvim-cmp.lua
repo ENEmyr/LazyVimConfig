@@ -1,6 +1,6 @@
 return {
   "hrsh7th/nvim-cmp",
-  version = false, -- last release is way too old
+  version = false,
   event = "InsertEnter",
   dependencies = {
     "hrsh7th/cmp-nvim-lsp",
@@ -10,23 +10,17 @@ return {
     "hrsh7th/cmp-cmdline",
     "onsails/lspkind.nvim",
   },
-  -- Not all LSP servers add brackets when completing a function.
-  -- To better deal with this, LazyVim adds a custom option to cmp,
-  -- that you can configure. For example:
-  --
-  -- ```lua
-  -- opts = {
-  --   auto_brackets = { "python" }
-  -- }
-  -- ```
   opts = function()
+    -- Turn on ghost text for AI completions
+    vim.g.ai_cmp = true
     vim.api.nvim_set_hl(0, "CmpGhostText", { link = "Comment", default = true })
+
     local cmp = require("cmp")
     local defaults = require("cmp.config.default")()
-    local lspkind = require("lspkind")
     local auto_select = true
+
     return {
-      auto_brackets = { "python" }, -- configure any filetype to auto add brackets
+      auto_brackets = { "python" },
       completion = {
         completeopt = "menu,menuone,noinsert" .. (auto_select and "" or ",noselect"),
       },
@@ -38,26 +32,21 @@ return {
         ["<C-p>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
         ["<C-j>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
         ["<C-k>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-        ["<tab>"] = LazyVim.cmp.confirm({ select = auto_select }),
-        -- ["<S-Tab>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
+        ["<Tab>"] = LazyVim.cmp.confirm({ select = auto_select }),
+        ["<S-Tab>"] = function(fallback)
+          return LazyVim.cmp.map({ "snippet_backward" }, fallback)()
+        end,
         ["<C-Space>"] = cmp.mapping.complete(),
-        ["<CR>"] = LazyVim.cmp.confirm({ select = auto_select }),
+        ["<CR>"] = function(fallback)
+          return LazyVim.cmp.map({ "snippet_forward", "ai_accept" }, fallback)()
+        end,
         ["<C-y>"] = LazyVim.cmp.confirm({ select = true }),
-        ["<S-CR>"] = LazyVim.cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+        ["<S-CR>"] = LazyVim.cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace }),
         ["<C-CR>"] = function(fallback)
           return LazyVim.cmp.map({ "snippet_forward", "ai_accept" }, fallback)()
         end,
-        -- ["<C-CR>"] = function(fallback)
-        --   cmp.abort()
-        --   fallback()
-        -- end,
-        -- ["<tab>"] = function(fallback)
-        --   return LazyVim.cmp.map({ "snippet_forward", "ai_accept" }, fallback)()
-        -- end,
       }),
-
       sources = cmp.config.sources({
-        -- { name = "jupynium", priority = 1000 }, -- consider higher priority than LSP
         { name = "lazydev" },
         { name = "nvim_lsp" },
         { name = "path" },
@@ -70,26 +59,21 @@ return {
           if icons[item.kind] then
             item.kind = icons[item.kind] .. item.kind
           end
-
           local widths = {
             abbr = vim.g.cmp_widths and vim.g.cmp_widths.abbr or 40,
             menu = vim.g.cmp_widths and vim.g.cmp_widths.menu or 30,
           }
-
           for key, width in pairs(widths) do
             if item[key] and vim.fn.strdisplaywidth(item[key]) > width then
-              item[key] = vim.fn.strcharpart(item[key], 0, width - 1) .. "â€¦"
+              item[key] = vim.fn.strcharpart(item[key], 0, width - 1) .. "…"
             end
           end
-
           return item
         end,
       },
       experimental = {
-        -- only show ghost text when we show ai completions
-        ghost_text = vim.g.ai_cmp and {
-          hl_group = "CmpGhostText",
-        } or false,
+        -- Only show ghost text when AI completions are enabled and we're in an AI completion context
+        ghost_text = vim.g.ai_cmp and { hl_group = "CmpGhostText" } or false,
       },
       sorting = defaults.sorting,
     }

@@ -15,29 +15,30 @@ local wk = require("which-key")
 wk.add({
   { "<leader>\\", "<cmd>CommentToggle<CR>", desc = "Toggle Comment" },
 
-  { "<leader>a", group = "Copilot" },
-  { "<leader>at", "<cmd>CopilotChatToggle<CR>", desc = "Chat Toggle" },
-  { "<leader>ar", "<cmd>CopilotChatReset<CR>", desc = "Reset Chat" },
-  {
-    "<leader>aa",
-    expand = function()
-      local actions = require("CopilotChat.actions")
-      require("CopilotChat.integrations.telescope").pick(actions.prompt_actions())
-    end,
-    desc = "Prompt Actions",
-    mode = { "n", "v" },
-  },
-  {
-    "<leader>aq",
-    expand = function()
-      local input = vim.fn.input("Quick Chat: ")
-      if input ~= "" then
-        require("CopilotChat").ask(input, { selection = require("CopilotChat.select").buffer })
-      end
-    end,
-    desc = "Quick Chat",
-    mode = { "n", "v" },
-  },
+  { "<leader>at", group = "Toggle OpenCode" },
+  -- { "<leader>a", group = "Copilot" },
+  -- { "<leader>at", "<cmd>CopilotChatToggle<CR>", desc = "Chat Toggle" },
+  -- { "<leader>ar", "<cmd>CopilotChatReset<CR>", desc = "Reset Chat" },
+  -- {
+  --   "<leader>aa",
+  --   expand = function()
+  --     local actions = require("CopilotChat.actions")
+  --     require("CopilotChat.integrations.telescope").pick(actions.prompt_actions())
+  --   end,
+  --   desc = "Prompt Actions",
+  --   mode = { "n", "v" },
+  -- },
+  -- {
+  --   "<leader>aq",
+  --   expand = function()
+  --     local input = vim.fn.input("Quick Chat: ")
+  --     if input ~= "" then
+  --       require("CopilotChat").ask(input, { selection = require("CopilotChat.select").buffer })
+  --     end
+  --   end,
+  --   desc = "Quick Chat",
+  --   mode = { "n", "v" },
+  -- },
 
   { "<leader>bf", "<cmd>Telescope buffers<cr>", desc = "Find" },
   { "<leader>bj", "<cmd>BufferLinePick<CR>", desc = "Jump" },
