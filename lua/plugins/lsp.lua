@@ -1,21 +1,19 @@
+-- =============================================================================
+-- LSP Configuration
+-- =============================================================================
 return {
   "neovim/nvim-lspconfig",
   opts = function(_, opts)
-    -- Get vue-language-server path from mason
-    local vue_language_server_path = vim.fn.stdpath("data")
-      .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
-
-    local vue_plugin = {
-      name = "@vue/typescript-plugin",
-      location = vue_language_server_path,
-      languages = { "vue" },
-      configNamespace = "typescript",
-    }
-
+    -- Initialize tables
     opts.servers = opts.servers or {}
     opts.setup = opts.setup or {}
 
-    -- TypeScript/JavaScript with Vue plugin
+    -- =========================================================================
+    -- Vue / TypeScript / JavaScript
+    -- =========================================================================
+    local vue_ls_path = vim.fn.stdpath("data")
+      .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
+
     opts.servers.vtsls = {
       enabled = true,
       filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
@@ -30,28 +28,31 @@ return {
           enableMoveToFileCodeAction = true,
           tsserver = {
             globalPlugins = {
-              vue_plugin,
+              {
+                name = "@vue/typescript-plugin",
+                location = vue_ls_path,
+                languages = { "vue" },
+                configNamespace = "typescript",
+              },
             },
           },
         },
       },
     }
 
-    -- Vue language server
-    opts.servers.vue_ls = {
-      enabled = true,
-    }
+    opts.servers.vue_ls = { enabled = true }
+    opts.servers.volar = { enabled = false } -- Replaced by vue_ls
 
-    -- Disable volar (replaced by vue_ls)
-    opts.servers.volar = { enabled = false }
-
-    -- C/C++
+    -- =========================================================================
+    -- C/C++ (clangd)
+    -- =========================================================================
     opts.servers.clangd = {
       keys = {
         { "<leader>cR", "<cmd>ClangdSwitchSourceHeader<cr>", desc = "Switch Source/Header (C/C++)" },
       },
       root_dir = function(fname)
-        return require("lspconfig.util").root_pattern(
+        local util = require("lspconfig.util")
+        return util.root_pattern(
           "Makefile",
           "configure.ac",
           "configure.in",
@@ -59,8 +60,9 @@ return {
           "meson.build",
           "meson_options.txt",
           "build.ninja"
-        )(fname) or require("lspconfig.util").root_pattern("compile_commands.json", "compile_flags.txt")(fname)
-          or require("lspconfig.util").find_git_ancestor(fname)
+        )(fname)
+          or util.root_pattern("compile_commands.json", "compile_flags.txt")(fname)
+          or util.find_git_ancestor(fname)
       end,
       capabilities = {
         offsetEncoding = { "utf-16" },
@@ -81,7 +83,9 @@ return {
       },
     }
 
+    -- =========================================================================
     -- Python
+    -- =========================================================================
     opts.servers.pyright = {
       enabled = true,
       settings = {
@@ -100,42 +104,22 @@ return {
       },
     }
 
-    opts.servers.basedpyright = {
-      enabled = false,
-      settings = {
-        autoImportCompletions = true,
-        reportUnknownVariableType = false,
-        reportUnusedImport = false,
-        disableOrganizeImports = true,
-        basedpyright = {
-          analysis = {
-            ignore = { "*" },
-            typeCheckingMode = "off",
-            useLibraryCodeForTypes = true,
-            autoSearchPaths = true,
-          },
-        },
-      },
-      keys = {
-        { "<leader>co", "<cmd>PyrightOrganizeImports<cr>", desc = "Organize Imports" },
-      },
-    }
+    opts.servers.basedpyright = { enabled = false }
 
     opts.servers.ruff = {
       enabled = true,
       settings = {
         ruff = {
           organizeImports = true,
-          lint = {
-            enabled = true,
-            ignore = {},
-          },
+          lint = { enabled = true, ignore = {} },
           format = { enabled = true },
         },
       },
     }
 
+    -- =========================================================================
     -- LaTeX
+    -- =========================================================================
     opts.servers.texlab = {
       enabled = true,
       settings = {
@@ -163,10 +147,14 @@ return {
       },
     }
 
-    -- Setup handlers
+    -- =========================================================================
+    -- Setup Handlers
+    -- =========================================================================
     opts.setup.clangd = function(_, server_opts)
       local clangd_ext_opts = LazyVim.opts("clangd_extensions.nvim")
-      require("clangd_extensions").setup(vim.tbl_deep_extend("force", clangd_ext_opts or {}, { server = server_opts }))
+      require("clangd_extensions").setup(
+        vim.tbl_deep_extend("force", clangd_ext_opts or {}, { server = server_opts })
+      )
       return false
     end
   end,

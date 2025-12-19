@@ -1,4 +1,9 @@
+-- =============================================================================
+-- Bufferline: Enhanced buffer tabs
+-- =============================================================================
 return {
   "akinsho/bufferline.nvim",
-  commit = "73540cb",
+  -- Remove commit pin to allow updates
+  event = "VeryLazy",
+  opts = {},
 }

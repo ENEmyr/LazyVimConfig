@@ -1,21 +1,17 @@
 return {
+  -- Catppuccin colorscheme
   {
     "catppuccin/nvim",
-    lazy = false,
     name = "catppuccin",
-    -- you can do it like this with a config function
-    config = function()
-      require("catppuccin").setup({
-        -- configurations
-        flavour = "mocha",
-        transparent_background = false,
-      })
-    end,
-    -- or just use opts table
+    lazy = false,
+    priority = 1000,
     opts = {
-      -- configurations
+      flavour = "mocha",
+      transparent_background = false,
     },
   },
+
+  -- Set LazyVim colorscheme
   {
     "LazyVim/LazyVim",
     opts = {

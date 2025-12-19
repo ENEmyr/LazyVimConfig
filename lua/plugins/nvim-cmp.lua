@@ -1,3 +1,6 @@
+-- =============================================================================
+-- nvim-cmp Configuration
+-- =============================================================================
 return {
   "hrsh7th/nvim-cmp",
   version = false,
@@ -6,13 +9,10 @@ return {
     "hrsh7th/cmp-nvim-lsp",
     "hrsh7th/cmp-buffer",
     "hrsh7th/cmp-path",
-    "hrsh7th/cmp-emoji",
     "hrsh7th/cmp-cmdline",
     "onsails/lspkind.nvim",
   },
   opts = function()
-    -- Turn on ghost text for AI completions
-    vim.g.ai_cmp = true
     vim.api.nvim_set_hl(0, "CmpGhostText", { link = "Comment", default = true })
 
     local cmp = require("cmp")
@@ -58,25 +58,27 @@ return {
         { name = "buffer" },
       }),
       formatting = {
-        format = function(entry, item)
+        format = function(_, item)
           local icons = LazyVim.config.icons.kinds
           if icons[item.kind] then
             item.kind = icons[item.kind] .. item.kind
           end
+
           local widths = {
             abbr = vim.g.cmp_widths and vim.g.cmp_widths.abbr or 40,
             menu = vim.g.cmp_widths and vim.g.cmp_widths.menu or 30,
           }
+
           for key, width in pairs(widths) do
             if item[key] and vim.fn.strdisplaywidth(item[key]) > width then
-              item[key] = vim.fn.strcharpart(item[key], 0, width - 1) .. "�"
+              item[key] = vim.fn.strcharpart(item[key], 0, width - 1) .. "..."
             end
           end
+
           return item
         end,
       },
       experimental = {
-        -- Only show ghost text when AI completions are enabled and we're in an AI completion context
         ghost_text = vim.g.ai_cmp and { hl_group = "CmpGhostText" } or false,
       },
       sorting = defaults.sorting,
