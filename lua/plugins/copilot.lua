@@ -9,10 +9,8 @@ return {
       auto_trigger = true,
       keymap = {
         accept = false, -- handled by nvim-cmp / blink.cmp
-        -- next = "<C-]>",
-        -- prev = "<C-[>",
         accept_word = "<C-]>",
-        dismiss = "<C-[>",
+        dismiss = "<Esc>",
         -- prev = "<C-[>",
         -- dismiss = false,
       },

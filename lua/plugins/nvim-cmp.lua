@@ -32,6 +32,10 @@ return {
         ["<C-p>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
         ["<C-j>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
         ["<C-k>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
+        ["<Esc>"] = cmp.mapping(function()
+          cmp.abort()
+          vim.cmd("stopinsert")
+        end, { "i", "s" }),
         ["<Tab>"] = LazyVim.cmp.confirm({ select = auto_select }),
         ["<S-Tab>"] = function(fallback)
           return LazyVim.cmp.map({ "snippet_backward" }, fallback)()
@@ -65,7 +69,7 @@ return {
           }
           for key, width in pairs(widths) do
             if item[key] and vim.fn.strdisplaywidth(item[key]) > width then
-              item[key] = vim.fn.strcharpart(item[key], 0, width - 1) .. "…"
+              item[key] = vim.fn.strcharpart(item[key], 0, width - 1) .. "ï¿½"
             end
           end
           return item
