@@ -177,15 +177,15 @@ When typing Thai, vim commands still work:
 
 ### Others
 
-| Plugin               | Description                  |
-| -------------------- | ---------------------------- |
-| `auto-session`       | Automatic session management |
-| `todo-comments.nvim` | TODO/FIXME highlighting      |
-| `nvim-comment`       | Comment toggle               |
-| `overseer.nvim`      | Task runner                  |
-| `presence.nvim`      | Discord Rich Presence        |
-| `leetcode.nvim`      | LeetCode integration         |
-| `vimtex`             | LaTeX support (Linux only)   |
+| Plugin               | Description                       |
+| -------------------- | --------------------------------- |
+| `auto-session`       | Automatic session management      |
+| `todo-comments.nvim` | TODO/FIXME highlighting           |
+| `nvim-comment`       | Comment toggle                    |
+| `overseer.nvim`      | Task runner                       |
+| `cord.nvim`          | Discord Rich Presence (WSL ready) |
+| `leetcode.nvim`      | LeetCode integration              |
+| `vimtex`             | LaTeX support (Linux only)        |
 
 ## Adding & Configuring Plugins
 
@@ -373,6 +373,30 @@ if vim.g.neovide then
   -- ... more Neovide settings
 end
 ```
+
+### WSL Discord Rich Presence Setup
+
+To enable Discord Rich Presence in WSL, you need to bridge the Windows Discord IPC pipe to WSL using `socat` and `npiperelay`.
+
+**Requirements:**
+
+1. Install `socat` in WSL: `sudo pacman -S socat` (Arch) or `sudo apt install socat` (Ubuntu)
+2. Download [npiperelay.exe](https://github.com/jstarks/npiperelay/releases) and add it to your Windows PATH
+
+**Add this to your `.zshrc` or `.bashrc`:**
+
+```bash
+nvim() {
+    if ! pidof socat > /dev/null 2>&1; then
+        [ -e /tmp/discord-ipc-0 ] && rm -f /tmp/discord-ipc-0
+        socat UNIX-LISTEN:/tmp/discord-ipc-0,fork \
+            EXEC:"npiperelay.exe //./pipe/discord-ipc-0" 2>/dev/null &
+    fi
+    command nvim "$@"
+}
+```
+
+This creates a socket bridge that forwards Discord IPC from Windows to WSL when you launch Neovim.
 
 ## LazyVim Extras
 

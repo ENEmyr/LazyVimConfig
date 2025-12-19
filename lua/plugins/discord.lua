@@ -1,26 +1,61 @@
--- Discord Rich Presence
+-- Discord Rich Presence (supports WSL)
 return {
   {
-    "andweeb/presence.nvim",
+    "vyfor/cord.nvim",
+    build = ":Cord update",
     event = "VeryLazy",
     opts = {
-      auto_update = true,
-      neovim_image_text = "The One True Text Editor",
-      main_image = "neovim",
-      client_id = "793271441293967371",
-      debounce_timeout = 10,
-      enable_line_number = false,
-      buttons = true,
-      editing_text = "Editing %s",
-      file_explorer_text = "Browsing %s",
-      git_commit_text = "Committing changes",
-      plugin_manager_text = "Managing plugins",
-      reading_text = "Reading %s",
-      workspace_text = "Working on %s",
-      line_number_text = "Line %s out of %s",
+      editor = {
+        client = "lazyvim",
+        tooltip = "The One True Text Editor",
+      },
+      display = {
+        theme = "catppuccin",
+      },
+      text = {
+        workspace = function(opts)
+          return "In " .. opts.workspace
+        end,
+        viewing = function(opts)
+          return "Viewing " .. opts.filename
+        end,
+        editing = function(opts)
+          return "Editing " .. opts.filename
+        end,
+        file_browser = function(opts)
+          return "Browsing files in " .. opts.name
+        end,
+        plugin_manager = function(opts)
+          return "Managing plugins in " .. opts.name
+        end,
+        lsp = function(opts)
+          return "Configuring LSP in " .. opts.name
+        end,
+        vcs = function(opts)
+          return "Committing changes in " .. opts.name
+        end,
+      },
+      buttons = {
+        {
+          label = function(opts)
+            return opts.repo_url and "View Repository" or nil
+          end,
+          url = function(opts)
+            return opts.repo_url
+          end,
+        },
+      },
+      advanced = {
+        discord = {
+          -- WSL: socat creates socket at /tmp/discord-ipc-0
+          pipe_paths = { "/tmp/discord-ipc-0" },
+          reconnect = {
+            enabled = true,
+            interval = 5000,
+            initial = true,
+          },
+        },
+      },
     },
-    config = function(_, opts)
-      require("presence"):setup(opts)
-    end,
   },
 }
