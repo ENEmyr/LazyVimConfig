@@ -1,0 +1,22 @@
+return {
+  "CopilotC-Nvim/CopilotChat.nvim", -- run `sudo luarocks install --lua-version 5.1 tiktoken_core` for performance and cost efficiently
+  opts = function()
+    local user = vim.env.USER or "ENEmy"
+    user = user:sub(1, 1):upper() .. user:sub(2)
+    return {
+      model = "claude-sonnet-4.5",
+      auto_insert_mode = true,
+      show_help = true,
+      -- question_header = "?  " .. user .. " ",
+      -- answer_header = "?  Copilot ",
+      window = {
+        width = 0.4,
+      },
+      -- NEW: default context comes from resources (no Lua `selection` fn)
+      -- If there's a visual selection, use it; otherwise fall back to buffer.
+      -- `sticky` lets you see the active resource right in the chat buffer.
+      context = "buffer",
+      sticky = "#selection",
+    }
+  end,
+}
