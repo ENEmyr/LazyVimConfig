@@ -253,11 +253,11 @@ PLUGINS = {
       vim.keymap.set('n', '-', '<C-x>', { desc = 'Decrement', noremap = true })
     end,
   },
-  {
-    "pmizio/typescript-tools.nvim",
-    dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
-    opts = {},
-  }
+  -- {
+  --   "pmizio/typescript-tools.nvim",
+  --   dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+  --   opts = {},
+  -- }
   -- {
   --   "zbirenbaum/copilot-cmp",
   --   config = function()
