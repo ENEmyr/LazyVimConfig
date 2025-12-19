@@ -8,11 +8,9 @@ return {
       enabled = not vim.g.ai_cmp,
       auto_trigger = true,
       keymap = {
-        accept = false, -- handled by nvim-cmp / blink.cmp
+        accept = false, -- We'll set it manually below
         accept_word = "<C-]>",
         dismiss = "<Esc>",
-        -- prev = "<C-[>",
-        -- dismiss = false,
       },
     },
     panel = { enabled = false },
@@ -23,4 +21,18 @@ return {
     },
     copilot_model = "claude-sonnet-4.5",
   },
+  config = function(_, opts)
+    require("copilot").setup(opts)
+
+    -- Manual keymap for Ctrl+Enter to accept suggestion
+    vim.keymap.set("i", "<C-CR>", function()
+      local suggestion = require("copilot.suggestion")
+      if suggestion.is_visible() then
+        suggestion.accept()
+      else
+        -- Fallback: insert newline
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<CR>", true, false, true), "n", false)
+      end
+    end, { desc = "Accept Copilot suggestion" })
+  end,
 }

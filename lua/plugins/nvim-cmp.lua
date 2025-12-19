@@ -42,7 +42,7 @@ return {
         end,
         ["<C-Space>"] = cmp.mapping.complete(),
         ["<CR>"] = function(fallback)
-          return LazyVim.cmp.map({ "snippet_forward", "ai_accept" }, fallback)()
+          fallback()
         end,
         ["<C-y>"] = LazyVim.cmp.confirm({ select = true }),
         ["<S-CR>"] = LazyVim.cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace }),

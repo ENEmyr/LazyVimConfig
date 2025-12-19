@@ -65,6 +65,14 @@ My Personal Neovim configuration based on [LazyVim](https://github.com/LazyVim/L
 | `+`          | n    | Increment number (remapped from C-a) |
 | `-`          | n    | Decrement number (remapped from C-x) |
 
+### Copilot (AI Completion)
+
+| Key       | Mode | Description              |
+| --------- | ---- | ------------------------ |
+| `<C-CR>`  | i    | Accept Copilot suggestion |
+| `<C-]>`   | i    | Accept word              |
+| `<Esc>`   | i    | Dismiss suggestion       |
+
 ### Hop (Quick Navigation)
 
 | Key          | Mode | Description               |
