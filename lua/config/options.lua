@@ -29,6 +29,40 @@ vim.g.pydocstring_enable_mapping = 0
 vim.g.root_lsp_ignore = { "copilot" }
 vim.g.ai_cmp = false
 
+-- Fix linewise paste from system clipboard
+-- Problem: when using clipboard=unnamedplus, yy+p may paste inline instead of on new line
+-- Solution: Track regtype during yank and apply it during paste
+vim.g._last_yank_regtype = "v"
+
+vim.api.nvim_create_autocmd("TextYankPost", {
+  callback = function()
+    local event = vim.v.event
+    if event.regname == "" or event.regname == "+" then
+      vim.g._last_yank_regtype = event.regtype
+    end
+  end,
+})
+
+-- Custom paste that respects linewise yank
+vim.keymap.set("n", "p", function()
+  local clipboard_content = vim.fn.getreg("+")
+  local regtype = vim.fn.getregtype("+")
+  -- If regtype is charwise but we yanked linewise, force linewise paste
+  if regtype == "v" and vim.g._last_yank_regtype == "V" then
+    vim.fn.setreg("+", clipboard_content, "V")
+  end
+  return "p"
+end, { expr = true, desc = "Paste (respects linewise)" })
+
+vim.keymap.set("n", "P", function()
+  local clipboard_content = vim.fn.getreg("+")
+  local regtype = vim.fn.getregtype("+")
+  if regtype == "v" and vim.g._last_yank_regtype == "V" then
+    vim.fn.setreg("+", clipboard_content, "V")
+  end
+  return "P"
+end, { expr = true, desc = "Paste before (respects linewise)" })
+
 -- -- Set text width for automatic line wrapping
 -- vim.opt.textwidth = 80
 -- -- Enable breaking long lines while preserving logical structure
