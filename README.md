@@ -67,11 +67,13 @@ My Personal Neovim configuration based on [LazyVim](https://github.com/LazyVim/L
 
 ### Copilot (AI Completion)
 
-| Key       | Mode | Description              |
-| --------- | ---- | ------------------------ |
-| `<C-CR>`  | i    | Accept Copilot suggestion |
-| `<C-]>`   | i    | Accept word              |
-| `<Esc>`   | i    | Dismiss suggestion       |
+| Key       | Mode | Description                      |
+| --------- | ---- | -------------------------------- |
+| `<C-CR>`  | i    | Accept Copilot suggestion        |
+| `<C-]>`   | i    | Accept word                      |
+| `<Esc>`   | i    | Dismiss suggestion               |
+| `<Tab>`   | n    | Accept NES (Next Edit Suggestion)|
+| `<Esc>`   | n    | Clear NES suggestion             |
 
 ### Hop (Quick Navigation)
 
@@ -146,7 +148,7 @@ When typing Thai, vim commands still work:
 
 ### AI
 
-- **GitHub Copilot** - AI code completion
+- **GitHub Copilot** - AI code completion with NES (Next Edit Suggestion) via `copilot-lsp`
 - **OpenCode.nvim** - AI coding assistant with chat interface
 
 ### Editor Enhancements
