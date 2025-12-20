@@ -149,7 +149,32 @@ When typing Thai, vim commands still work:
 ### AI
 
 - **GitHub Copilot** - AI code completion with NES (Next Edit Suggestion) via `copilot-lsp`
+  - Current model: `gemini-3-flash` (configurable via `copilot_model` in `lua/plugins/copilot.lua`)
 - **OpenCode.nvim** - AI coding assistant with chat interface
+
+#### Available Copilot Models
+
+You can change the model by setting `copilot_model` option. Available models can be found at:
+https://docs.github.com/en/copilot/reference/ai-models/supported-models
+
+| Model | Provider | Multiplier | Notes |
+| ----- | -------- | ---------- | ----- |
+| `gpt-4.1` | OpenAI | 0x | Free |
+| `gpt-5` | OpenAI | 1x | |
+| `gpt-5-mini` | OpenAI | 0x | Free |
+| `gpt-5.1` | OpenAI | 1x | |
+| `gpt-5.1-codex` | OpenAI | 1x | |
+| `gpt-5.1-codex-mini` | OpenAI | 0.33x | |
+| `gpt-5.2` | OpenAI | 1x | |
+| `claude-haiku-4.5` | Anthropic | 0.33x | |
+| `claude-sonnet-4` | Anthropic | 1x | |
+| `claude-sonnet-4.5` | Anthropic | 1x | |
+| `claude-opus-4.1` | Anthropic | 10x | Pro+ only |
+| `claude-opus-4.5` | Anthropic | 3x | Pro+ only |
+| `gemini-2.5-pro` | Google | 1x | |
+| `gemini-3-flash` | Google | 0.33x | Preview |
+| `gemini-3-pro` | Google | 1x | Preview |
+| `grok-code-fast-1` | xAI | 0.25x | |
 
 ### Editor Enhancements
 

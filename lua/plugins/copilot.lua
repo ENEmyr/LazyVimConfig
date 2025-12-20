@@ -27,7 +27,7 @@ return {
       help = true,
       tex = true,
     },
-    copilot_model = "claude-sonnet-4.5",
+    copilot_model = "gemini-3-flash",
     -- NES (Next Edit Suggestion) - requires copilot-lsp
     nes = {
       enabled = true,
