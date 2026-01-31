@@ -27,8 +27,9 @@ return {
       help = true,
       tex = true,
     },
-    copilot_model = "gemini-3-flash",
+    copilot_model = "grok-code-fast-1",
     -- NES (Next Edit Suggestion) - requires copilot-lsp
+    -- Note: May encounter "Unexpected start column" error with certain Copilot responses
     nes = {
       enabled = true,
       auto_trigger = true,
@@ -53,6 +54,15 @@ return {
       end
     end, { desc = "Accept Copilot suggestion" })
 
+    vim.keymap.set("i", "<M-CR>", function()
+      local suggestion = require("copilot.suggestion")
+      if suggestion.is_visible() then
+        suggestion.accept()
+      else
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<CR>", true, false, true), "n", false)
+      end
+    end, { desc = "Accept Copilot suggestion (Alt+Enter - tmux workaround)" })
+
     -- NES keymap for Tab in Normal mode
     vim.keymap.set("n", "<Tab>", function()
       local bufnr = vim.api.nvim_get_current_buf()
@@ -61,10 +71,7 @@ return {
         -- Try to jump to the start of the suggestion edit.
         -- If already at the start, then apply the pending suggestion and jump to the end of the edit.
         local _ = require("copilot-lsp.nes").walk_cursor_start_edit()
-          or (
-            require("copilot-lsp.nes").apply_pending_nes()
-            and require("copilot-lsp.nes").walk_cursor_end_edit()
-          )
+          or (require("copilot-lsp.nes").apply_pending_nes() and require("copilot-lsp.nes").walk_cursor_end_edit())
         return nil
       else
         -- Fallback to Ctrl+i (jump forward)
