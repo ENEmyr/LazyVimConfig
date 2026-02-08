@@ -27,7 +27,8 @@ return {
       help = true,
       tex = true,
     },
-    copilot_model = "grok-code-fast-1",
+    -- seems like gpt41-copilot is the only model that supports auto-completion feature (https://github.com/zbirenbaum/copilot.lua/issues/649)
+    -- copilot_model = "grok-code-fast-1",
     -- NES (Next Edit Suggestion) - requires copilot-lsp
     -- Note: May encounter "Unexpected start column" error with certain Copilot responses
     nes = {
